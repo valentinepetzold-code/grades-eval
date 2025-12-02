@@ -323,3 +323,15 @@ comm_counts |>
 
 # 17)
 
+```{r}
+comm_counts |>
+  ggplot(aes(x = as.factor(group), y = n_comm)) +
+  geom_boxplot(fill = "skyblue", color = "black") +
+  stat_summary(fun = median, geom = "point", color = "red", size = 2) +
+  labs(
+    x = "Group",
+    y = "Number of Grades in Community Building",
+    title = "Distribution of Community Building Grades by Group"
+  )
+```
+
