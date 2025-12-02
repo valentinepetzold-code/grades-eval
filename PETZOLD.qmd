@@ -273,3 +273,17 @@ stats_table <- tibble(
 kable(stats_table)
 ```
 
+# 14)
+
+```{r}
+grades_per_student |>
+  ggplot(aes(x = n_grades, fill = sex)) +
+  geom_density(alpha = 0.4) +
+  labs(title = "Distribution of Number of Grades per Student by Sex",
+       x = "Number of Grades",
+       y = "Density")
+```
+
+# 15)
+
+
