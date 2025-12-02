@@ -418,24 +418,15 @@ labs(x = "Average Community Building", y = "Average Radiation Ecology", title = 
 
 ```{r}
 
-surv_course <- courses |> filter(str_detect(tolower(course_name), "survival skills|wilderness medicine"))
-if(nrow(surv_course) == 0) stop("Survival Skills course not found automatically.")
-surv_id <- surv_course$course_id[1]
 
+result <- avg_by_student_course %>%
+  filter(course_id %in% c(1, 9)) %>%
+  select(id, course_id, avg_grade) %>%
+  pivot_wider(names_from = course_id, values_from = avg_grade) %>%
+  summarize(correlation = cor(`9`, `1`, use = "complete.obs"))
 
-mp_surv <- avg_by_student_course |>
-filter(course_id %in% c(moral_id, surv_id)) |>
-pivot_wider(names_from = course_id, values_from = avg_grade, names_prefix = "course_") |>
-rename(
-moral_avg = paste0("course_", moral_id),
-surv_avg = paste0("course_", surv_id)
-) |>
-left_join(students |> select(id, group), by = "id") |>
-group_by(group) |>
-summarise(correlation = cor(moral_avg, surv_avg, use = "complete.obs")) |>
-arrange(desc(correlation))
+result
 
-kable(mp_surv)
 
 ```
 
