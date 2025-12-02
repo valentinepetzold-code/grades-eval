@@ -335,3 +335,24 @@ comm_counts |>
   )
 ```
 
+# 18)
+
+```{r}
+comm_counts |>
+  left_join(students |> select(id, sex), by = "id") |>
+  ggplot(aes(x = as.factor(group), y = n_comm, color = sex)) +
+  geom_jitter(width = 0.2, alpha = 0.6) +
+  stat_summary(
+    fun = median,
+    geom = "point",
+    aes(group = interaction(group, sex)),
+    position = position_dodge(width = 0.6),
+    size = 2
+  ) +
+  labs(
+    title = "Community Building Grades Count by Group and Sex",
+    x = "Group",
+    y = "Number of Grades"
+  )
+```
+
