@@ -538,4 +538,19 @@ fail_but_high <- pass_df |>
 n_fail_but_high <- nrow(fail_but_high)
 cat("Number of students who do not pass but have final_grade >= 10:", n_fail_but_high, "\n")
 ```
+# 28)
+
+```{r}
+library(scales)
+
+pass_rate_by_group <- pass_df |>
+  group_by(group) |>
+  summarise(pass_rate = mean(pass, na.rm = TRUE), n = n())
+
+pass_rate_by_group |>
+  ggplot(aes(x = as.factor(group), y = pass_rate)) +
+  geom_col(fill = "skyblue", color = "black") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Pass Rate by Group", x = "Group", y = "Pass Rate")
+```
 
