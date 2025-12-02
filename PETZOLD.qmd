@@ -474,7 +474,7 @@ final_grade_df %>% slice_head(n = 5) %>% kable()
 ```
 
 
-# 24 & 25) 
+# 24) 
 
 ```{r}
 # Visualiser final grade par group
@@ -484,9 +484,11 @@ ggplot(aes(x = as.factor(group), y = final_grade)) +
 geom_boxplot() +
 labs(title = "Final grade by group", x = "Group", y = "Final grade") +
 theme(axis.text.x = element_text(angle=90, vjust=0.5))
+```
 
-# Ajouter l'effet du sexe (facetted)
+# 25)
 
+```{r}
 final_grade_df %>%
 ggplot(aes(x = as.factor(group), y = final_grade, fill = sex)) +
 geom_boxplot(position = position_dodge(width = 0.9)) +
@@ -542,4 +544,5 @@ select(id, group, final_grade, pass)
 pass_df %>% slice_head(n = 10) %>% kable()
 
 ```
+
 
