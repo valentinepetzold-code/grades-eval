@@ -386,32 +386,37 @@ student_course_wide |>
 # 20)
 
 ```{r}
-# Identifier les noms de cours
-
-rad_course <- courses %>% filter(str_detect(tolower(course_name), "radiation ecology"))
-if(nrow(rad_course) == 0) stop("Radiation Ecology course not found automatically.")
+rad_course <- courses %>% 
+  filter(str_detect(tolower(course_name), "radiation ecology"))
 rad_id <- rad_course$course_id[1]
 
-# Community id = comm_id déjà obtenu (comm_id)
-
-# Calculer moyenne par étudiant pour ces deux cours
+comm_course <- courses %>% 
+  filter(str_detect(tolower(course_name), "community building"))
+comm_id <- comm_course$course_id[1]
 
 rad_comm_avgs <- avg_by_student_course %>%
-filter(course_id %in% c(rad_id, comm_id)) %>%
-pivot_wider(names_from = course_id, values_from = avg_grade, names_prefix = "course_") %>%
-rename(
-rad_avg = paste0("course_", rad_id),
-comm_avg = paste0("course_", comm_id)
-) %>%
-left_join(students %>% select(id, group), by = c("id"))
+  filter(course_id %in% c(rad_id, comm_id)) %>%
+  select(id, course_id, avg_grade) %>%
+  pivot_wider(names_from = course_id, values_from = avg_grade)
 
-rad_comm_avgs %>%
-filter(!is.na(rad_avg) & !is.na(comm_avg)) %>%
-ggplot(aes(x = comm_avg, y = rad_avg)) +
-geom_point() +
-geom_smooth(method = "lm", se = FALSE) +
-labs(x = "Average Community Building", y = "Average Radiation Ecology", title = "Rad Ecology vs Community Building averages per student")
+colnames(rad_comm_avgs)[colnames(rad_comm_avgs) == as.character(rad_id)] <- "rad_avg"
+colnames(rad_comm_avgs)[colnames(rad_comm_avgs) == as.character(comm_id)] <- "comm_avg"
 
+rad_comm_avgs <- rad_comm_avgs %>%
+  filter(!is.na(rad_avg) & !is.na(comm_avg))
+
+print(head(rad_comm_avgs))
+print(paste("Nombre d'étudiants:", nrow(rad_comm_avgs)))
+
+ggplot(rad_comm_avgs, aes(x = comm_avg, y = rad_avg)) +
+  geom_point(alpha = 0.6, size = 3, color = "steelblue") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(
+    x = "Average Grade: Community Building and Social Organization",
+    y = "Average Grade: Radiation Ecology and Environmental Science",
+    title = "Relationship Between Course Grades"
+  ) +
+  theme_minimal()
 ```
 
 # 21)
