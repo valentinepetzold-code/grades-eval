@@ -433,20 +433,34 @@ result
 # 22)
 
 ```{r}
-best_group <- mp_surv %>% slice_max(abs(correlation), n = 1) %>% pull(group)
+library(dplyr)
+library(tidyr)
 
-Nuage pour ce groupe
+# Vérifier quels étudiants ont pris les deux cours
+students_with_both <- avg_by_student_course %>%
+  filter(course_id %in% c(1, 9)) %>%
+  group_by(id) %>%
+  summarize(n_courses = n_distinct(course_id)) %>%
+  filter(n_courses == 2)
 
-avg_by_student_course %>%
-filter(course_id %in% c(moral_id, surv_id)) %>%
-pivot_wider(names_from = course_id, values_from = avg_grade) %>%
-rename(moral_avg = paste0(moral_id), surv_avg = paste0(surv_id)) %>%
-left_join(students %>% select(id, group), by = "id") %>%
-filter(group == best_group, !is.na(moral_avg) & !is.na(surv_avg)) %>%
-ggplot(aes(x = moral_avg, y = surv_avg)) +
-geom_point() +
-geom_smooth(method = "lm", se = FALSE) +
-labs(title = paste("Moral vs Survival for group", best_group), x = "Moral avg", y = "Survival avg")
+print(students_with_both)
+
+# Si des étudiants ont les deux cours, calculer les corrélations
+if(nrow(students_with_both) > 0) {
+  data_wide <- avg_by_student_course %>%
+    filter(course_id %in% c(1, 9), id %in% students_with_both$id) %>%
+    select(id, course_id, avg_grade) %>%
+    pivot_wider(names_from = course_id, values_from = avg_grade)
+  
+  print(data_wide)
+  
+  # Corrélation globale
+  cor_result <- cor(data_wide$`1`, data_wide$`9`, use = "complete.obs")
+  print(paste("Corrélation:", cor_result))
+} else {
+  print("Aucun étudiant n'a pris les deux cours")
+}
+
 ```
 
 # 23)
