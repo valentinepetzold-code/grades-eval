@@ -286,4 +286,25 @@ grades_per_student |>
 
 # 15)
 
+```{r}
+comm_course <- courses |>
+  filter(str_detect(tolower(course_name), "community building|social organization"))
 
+if (nrow(comm_course) == 0) stop("Course 'Community Building and Social Organization' not found automatically.")
+
+comm_id <- comm_course$course_id[1]
+
+comm_counts <- grades |>
+  filter(course_id == comm_id, !is.na(grade)) |>
+  group_by(id) |>
+  summarise(n_comm = n()) |>
+  right_join(students |> select(id, group), by = "id") |>
+  replace_na(list(n_comm = 0)) |>
+  arrange(desc(n_comm))
+
+comm_counts |>
+  slice_head(n = 10) |>
+  kable()
+```
+
+# 16)
