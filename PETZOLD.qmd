@@ -477,8 +477,6 @@ final_grade_df %>% slice_head(n = 5) %>% kable()
 # 24) 
 
 ```{r}
-# Visualiser final grade par group
-
 final_grade_df %>%
 ggplot(aes(x = as.factor(group), y = final_grade)) +
 geom_boxplot() +
@@ -500,25 +498,14 @@ theme(axis.text.x = element_text(angle=90, vjust=0.5))
 # 26)
 
 ```{r}
-# Rappel: conditions pour passer
-
-# - aucune moyenne de cours < 5
-
-# - moyenne de chaque trimester >= 10 (la moyenne d'un trimestre = moyenne des moyennes des cours du trimestre)
-
-# 1) Calculer la moyenne par étudiant et cours (déjà avg_by_student_course)
 
 student_course_avg <- avg_by_student_course %>%
 select(id, course_id, avg_grade) %>%
 left_join(courses %>% select(course_id, trimester), by = "course_id")
 
-# 2) Condition 1 : aucune moyenne de cours < 5
-
 cond1 <- student_course_avg %>%
 group_by(id) %>%
 summarise(any_below_5 = any(avg_grade < 5, na.rm = TRUE))
-
-# 3) Condition 2 : moyen par trimester >= 10
 
 trimester_avg <- student_course_avg %>%
 group_by(id, trimester) %>%
@@ -527,8 +514,6 @@ summarise(trim_avg = mean(avg_grade, na.rm = TRUE), .groups = "drop")
 cond2 <- trimester_avg %>%
 group_by(id) %>%
 summarise(all_trim_ge_10 = all(trim_avg >= 10, na.rm = TRUE))
-
-# 4) Final assemble
 
 pass_df <- final_grade_df %>%
 left_join(cond1, by = "id") %>%
