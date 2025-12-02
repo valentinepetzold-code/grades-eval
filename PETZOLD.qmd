@@ -70,6 +70,28 @@ knitr::kable()
 
 # 1.3 Grades
 
+# 4)
+
+```{r}
+grades <- vroom::vroom(
+  "grades.csv",
+  delim = ":",          # séparateur inhabituel
+  na = "unknown",       # gérer les valeurs manquantes
+  col_types = list(
+    id = col_integer(),
+    course_id = col_integer(),
+    grade = col_double()
+  )
+)
+
+# Affichage d'un extrait
+grades %>% 
+  slice_head(n = 10) %>% 
+knitr::kable()
+```
+
+# 5)
+
 
 
 
