@@ -118,15 +118,26 @@ students |>
 # Calculer âge en années entières (arrondi à l'entier le plus proche si besoin)
 library(lubridate)
 
-students <- students %>%
+students <- students |>
 mutate(age = floor(time_length(today() - birth_date, unit = "year")))
 
-students %>%
+students |>
 ggplot(aes(x = age)) +
 geom_histogram(binwidth = 1, boundary = 0, closed = "left") +
 labs(title = "Distribution of student ages", x = "Age (years)", y = "Count")
 
 ```
+# 8)
+
+```{r}
+median_age_by_group <- students |>
+  group_by(group) |>
+  summarise(median_age = as.integer(median(age, na.rm = TRUE))) |>
+  arrange(desc(median_age))
+
+knitr::kable(median_age_by_group)
+```
+
 
 
 
