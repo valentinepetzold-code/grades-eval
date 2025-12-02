@@ -161,6 +161,79 @@ n_grades <- grades |>
 
 cat("The data set contains", n_grades, "grades.\n")
 ```
+# 11)
+
+```{r}
+library(stringr)
+
+# Identify the relevant courses
+target_courses <- courses |>
+  filter(str_detect(tolower(course_name), "moral philosophy|ethical decision"))
+
+# Stop if no course found
+if (nrow(target_courses) == 0) {
+  stop("Couldn't find any courses automatically. Please check courses.csv.")
+}
+
+# Get the course IDs
+course_ids <- target_courses$course_id
+
+# Compute average grades by group for these courses
+avg_grades <- grades |>
+  filter(course_id %in% course_ids, !is.na(grade)) |>
+  left_join(students |> select(id, group), by = "id") |>
+  group_by(group) |>
+  summarise(avg_grade = mean(grade, na.rm = TRUE)) |>
+  arrange(as.numeric(as.character(group)))
+
+# Plot the averages
+avg_grades |>
+  ggplot(aes(x = factor(group), y = avg_grade)) +
+  geom_col(fill = "skyblue", color = "black") +
+  labs(x = "Group", y = "Average grade", title = "Average Grades in Moral Philosophy & Ethical Decision-Making by Group") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
 
 
+```{r}
+target_courses <- courses |>
+  filter(course_name %in% c("Moral Philosophy 101", "Ethics & Decision Making"))
+
+course_ids <- target_courses$identifier
+
+avg_grades <- grades |>
+  filter(course_id %in% course_ids, !is.na(grade)) |>
+  left_join(students |> select(id, group), by = "id") |>
+  group_by(group) |>
+  summarise(avg_grade = mean(grade, na.rm = TRUE)) |>
+  arrange(as.numeric(as.character(group)))
+
+avg_grades |>
+  ggplot(aes(x = factor(group), y = avg_grade)) +
+  geom_col(fill = "skyblue", color = "black") +
+  labs(x = "Group", y = "Average grade", title = "Average Grades by Group") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+# 12)
+
+```{r}
+courses <- courses |>
+  rename(course_id = identifier)
+```
+
+```{r}
+grades_with_trimester <- grades |>
+  left_join(courses |> select(course_id, trimester), by = "course_id")
+```
+
+```{r}
+grades_with_trimester |>
+  filter(!is.na(grade)) |>
+  mutate(trimester = factor(trimester)) |>
+  ggplot(aes(x = trimester, y = grade)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, outlier.size = 0.8) +
+  labs(title = "Grade Distributions by Trimester", x = "Trimester", y = "Grade")
+```
 
