@@ -571,3 +571,23 @@ most_responsible <- course_fail_counts |>
 most_responsible
 ```
 
+# 30)
+
+```{r}
+pass_with_age <- pass_df |>
+  left_join(students |> select(id, age), by = "id")
+
+pass_with_age |>
+  group_by(age) |>
+  summarise(pass_rate = mean(pass, na.rm = TRUE), n = n(), .groups = "drop") |>
+  ggplot(aes(x = age, y = pass_rate)) +
+  geom_line() +
+  geom_point() +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(
+    title = "Pass Rate as a Function of Age",
+    x = "Age (years)",
+    y = "Pass Rate"
+  )
+```
+
