@@ -494,7 +494,6 @@ ggplot(aes(x = as.factor(group), y = final_grade, fill = sex)) +
 geom_boxplot(position = position_dodge(width = 0.9)) +
 labs(title = "Final grade by group and sex", x = "Group", y = "Final grade") +
 theme(axis.text.x = element_text(angle=90, vjust=0.5))
-
 ```
 
 
