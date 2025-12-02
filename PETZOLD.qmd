@@ -356,3 +356,31 @@ comm_counts |>
   )
 ```
 
+#  5. Grade analysis
+
+# 19)
+
+```{r}
+avg_by_student_course <- grades |>
+  filter(!is.na(grade)) |>
+  group_by(id, course_id) |>
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = "drop")
+
+avg_by_student_course <- avg_by_student_course |>
+  left_join(courses |> select(course_id, course_name), by = "course_id")
+
+student_course_wide <- avg_by_student_course |>
+  select(id, course_name, avg_grade) |>
+  pivot_wider(names_from = course_name, values_from = avg_grade)
+
+student_course_wide <- students |>
+  select(id, group) |>
+  left_join(student_course_wide, by = "id")
+
+student_course_wide |>
+  select(id, group, everything()) |>
+  slice_head(n = 6) |>
+  kable()
+```
+
+
