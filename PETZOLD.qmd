@@ -103,6 +103,14 @@ students %>%
   labs(x = "Group", y = "Number of students")
 ```
 
+# 6
+
+```{r}
+students |>
+  count(group, sex) |>
+  ggplot(aes(x = group, y = n, fill = sex)) +
+  geom_col()
+```
 
 
 
