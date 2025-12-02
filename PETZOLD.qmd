@@ -308,3 +308,18 @@ comm_counts |>
 ```
 
 # 16)
+
+```{r}
+comm_counts |>
+  count(n_comm) |>
+  ggplot(aes(x = as.factor(n_comm), y = n)) +
+  geom_col(fill = "skyblue", color = "black") +
+  labs(
+    x = "Number of Grades in Community Building",
+    y = "Number of Students",
+    title = "Distribution of the Number of Grades in Community Building"
+  )
+```
+
+# 17)
+
