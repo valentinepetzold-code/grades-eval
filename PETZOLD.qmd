@@ -112,5 +112,21 @@ students |>
   geom_col()
 ```
 
+# 7)
+
+```{r}
+# Calculer âge en années entières (arrondi à l'entier le plus proche si besoin)
+library(lubridate)
+
+students <- students %>%
+mutate(age = floor(time_length(today() - birth_date, unit = "year")))
+
+students %>%
+ggplot(aes(x = age)) +
+geom_histogram(binwidth = 1, boundary = 0, closed = "left") +
+labs(title = "Distribution of student ages", x = "Age (years)", y = "Count")
+
+```
+
 
 
