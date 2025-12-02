@@ -3,6 +3,10 @@ title: "PETZOLD"
 author: "Valentine Petzold"
 format: html
 ---
+
+https://github.com/valentinepetzold-code/grades-eval
+
+# 1. Introduction
 # 1.1 Study organisation
 # 1)
 ```{r}
@@ -235,5 +239,37 @@ grades_with_trimester |>
   geom_violin(trim = FALSE) +
   geom_boxplot(width = 0.1, outlier.size = 0.8) +
   labs(title = "Grade Distributions by Trimester", x = "Trimester", y = "Grade")
+```
+
+#  4. Attendance analysis
+
+# 13)
+
+```{r}
+library(knitr)
+
+grades_per_student <- grades |>
+  filter(!is.na(grade)) |>
+  group_by(id) |>
+  summarise(n_grades = n()) |>
+  left_join(students |> select(id, group, sex), by = "id") |>
+  arrange(desc(n_grades))
+
+grades_per_student |>
+  slice_head(n = 10) |>
+  kable()
+
+
+```
+
+```{r}
+stats_table <- tibble(
+  min = min(grades_per_student$n_grades, na.rm = TRUE),
+  max = max(grades_per_student$n_grades, na.rm = TRUE),
+  mean = round(mean(grades_per_student$n_grades, na.rm = TRUE), 2),
+  median = median(grades_per_student$n_grades, na.rm = TRUE)
+)
+
+kable(stats_table)
 ```
 
