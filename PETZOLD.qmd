@@ -150,6 +150,17 @@ oldest_by_group <- students |>
 knitr::kable(oldest_by_group)
 ```
 
+#  3. Simple grade analysis
+
+# 10)
+
+```{r}
+n_grades <- grades |>
+  filter(!is.na(grade)) |>
+  nrow()
+
+cat("The data set contains", n_grades, "grades.\n")
+```
 
 
 
