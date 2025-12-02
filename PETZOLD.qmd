@@ -554,3 +554,20 @@ pass_rate_by_group |>
   labs(title = "Pass Rate by Group", x = "Group", y = "Pass Rate")
 ```
 
+# 29)
+
+```{r}
+course_fail_counts <- student_course_avg |>
+  group_by(course_id) |>
+  summarise(n_below_5 = sum(avg_grade < 5, na.rm = TRUE), .groups = "drop") |>
+  left_join(courses |> select(course_id, course_name), by = "course_id") |>
+  arrange(desc(n_below_5))
+
+kable(course_fail_counts)
+
+most_responsible <- course_fail_counts |>
+  slice_max(n_below_5, n = 1)
+
+most_responsible
+```
+
