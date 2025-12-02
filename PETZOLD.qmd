@@ -529,4 +529,13 @@ pass_df %>% slice_head(n = 10) %>% kable()
 
 ```
 
+# 27)
+
+```{r}
+fail_but_high <- pass_df |>
+  filter(pass == FALSE & final_grade >= 10)
+
+n_fail_but_high <- nrow(fail_but_high)
+cat("Number of students who do not pass but have final_grade >= 10:", n_fail_but_high, "\n")
+```
 
