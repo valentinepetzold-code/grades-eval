@@ -15,6 +15,30 @@ library(dplyr)
 library(tidyr)
 ```
 ```{r}
-courses<-vroom(courses.csv)
+courses <- vroom::vroom(
+  "courses.csv",
+  delim = ",",
+  col_types = list(
+    course = col_character(),
+    course_id = col_integer(),
+    trimester = col_integer(),
+    nb_grades = col_integer()
+  )
+)
+```
+
+# 2)
+
+```{r}
+courses <- courses %>%
+  rename(
+    
+    course_name = course,
+    identifier = course_id,
+    number_of_exams = nb_grades
+  ) %>%
+  arrange(course_name)
+
+knitr::kable(courses)
 ```
 
