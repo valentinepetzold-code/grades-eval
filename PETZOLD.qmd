@@ -3,7 +3,7 @@ title: "PETZOLD"
 author: "Valentine Petzold"
 format: html
 ---
-
+# 1.1 Study organisation
 # 1)
 ```{r}
 here::i_am("grades-eval.Rproj")
@@ -41,4 +41,36 @@ courses <- courses %>%
 
 knitr::kable(courses)
 ```
+
+#  1.2 Students
+
+# 3)
+
+```{r}
+students <- vroom::vroom(
+  "students.csv",
+  delim = ",",
+  col_types = list(
+    id = col_integer(),
+    group = col_factor(),
+    birth_date = col_date(format = "%Y-%m-%d"),
+    sex = col_factor()
+  )
+)
+
+paste(
+  "The birth_date column of the students data frame is of class",
+  class(students$birth_date)
+)
+
+students %>% 
+  slice_head(n = 10) %>% 
+knitr::kable()
+```
+
+# 1.3 Grades
+
+
+
+
 
