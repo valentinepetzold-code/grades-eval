@@ -138,6 +138,18 @@ median_age_by_group <- students |>
 knitr::kable(median_age_by_group)
 ```
 
+# 9)
+
+```{r}
+oldest_by_group <- students |>
+  group_by(group) |>
+  slice_max(age, with_ties = FALSE) |>
+  select(id, group, sex, age) |>
+  arrange(desc(age))
+
+knitr::kable(oldest_by_group)
+```
+
 
 
 
