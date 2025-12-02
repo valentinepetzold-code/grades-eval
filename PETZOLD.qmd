@@ -4,3 +4,17 @@ author: "Valentine Petzold"
 format: html
 ---
 
+# 1)
+```{r}
+here::i_am("grades-eval.Rproj")
+```
+```{r}
+library(vroom)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+```{r}
+courses<-vroom(courses.csv)
+```
+
