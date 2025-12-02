@@ -168,24 +168,33 @@ cat("The data set contains", n_grades, "grades.\n")
 ```
 ### 11)
 
+The code gives the graph but does not allow rendering...
 
-```{r}
-target_course <- courses %>%
-  filter(course_name == "Moral Philosophy and Ethical Decision-Making")
+library(dplyr)
+library(ggplot2)
 
-print(target_course)  # Vérifier
+# S'assurer que courses est chargé
+if(!exists("courses")) {
+  courses <- read.csv("courses.csv")  # Ajustez le chemin si nécessaire
+}
 
-course_id_target <- target_course$course_id[1]
+# Trouver le cours et calculer en une seule étape
+course_id_target <- courses %>%
+  filter(course_name == "Moral Philosophy and Ethical Decision-Making") %>%
+  pull(course_id)
 
+# Vérifier que course_id_target n'est pas vide
+if(length(course_id_target) == 0) {
+  stop("Course not found!")
+}
+
+# Calculer les moyennes par groupe
 avg_grades <- grades %>%
-  filter(course_id == course_id_target, !is.na(grade)) %>%
+  filter(course_id == course_id_target[1], !is.na(grade)) %>%
   left_join(students %>% select(id, group), by = "id") %>%
   group_by(group) %>%
   summarise(avg_grade = mean(grade, na.rm = TRUE)) %>%
   arrange(group)
-
-print(avg_grades)  
-print(paste("Nombre de groupes:", nrow(avg_grades)))
 
 # Graphique
 avg_grades %>%
@@ -201,7 +210,7 @@ avg_grades %>%
     plot.title = element_text(face = "bold"),
     axis.text.x = element_text(size = 10)
   )
-```
+
 
 ### 12)
 
@@ -219,6 +228,7 @@ grades_with_trimester |>
   geom_boxplot(width = 0.1, outlier.size = 0.8) +
   labs(title = "Grade Distributions by Trimester", x = "Trimester", y = "Grade")
 ```
+The grades in trimester 3 are more dispersed and the trimester two has lower grades in average.
 
 #  4. Attendance analysis
 
